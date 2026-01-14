@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getSleekClient } from '@/lib/sleekcms'
+import { cmsClient } from '@/lib/sleekcms'
 
 export const fetchCache = 'force-no-store'
 export const dynamic = 'force-dynamic'
@@ -14,7 +14,7 @@ type Props = {
 
 export async function generateStaticParams() {
   try {
-    const client = getSleekClient()
+    const client = cmsClient()
     const slugs = await client.getSlugs('/blog')
 
     return slugs.map((slug: string) => ({
@@ -28,7 +28,7 @@ export async function generateStaticParams() {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params
-  const client = getSleekClient()
+  const client = cmsClient()
   const post = await client.getPage(`/blog/${slug}`)
 
   if (!post) {
@@ -39,12 +39,9 @@ export default async function BlogPostPage({ params }: Props) {
     <article>
       <Link 
         href="/" 
-        className="inline-flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900 transition-colors mb-8"
+        className="inline-flex items-center text-sm text-neutral-500 hover:text-neutral-900 transition-colors mb-8"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        Back to all posts
+        {"<-"} Back to all posts
       </Link>
 
       <header className="mb-10">
