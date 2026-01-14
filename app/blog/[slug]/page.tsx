@@ -1,21 +1,17 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import type { Metadata } from 'next'
-import { getSleekClient, BlogPost } from '@/lib/sleekcms'
+import { getSleekClient } from '@/lib/sleekcms'
 
-// Disable Next.js fetch caching to always get fresh content from CMS
 export const fetchCache = 'force-no-store'
 export const dynamic = 'force-dynamic'
 
-// Allow new slugs to be generated on-demand
 export const dynamicParams = true
 
 type Props = {
   params: Promise<{ slug: string }>
 }
 
-// Pre-render known posts at build time
 export async function generateStaticParams() {
   try {
     const client = getSleekClient()
@@ -25,38 +21,15 @@ export async function generateStaticParams() {
       slug,
     }))
   } catch (error) {
-    // If CMS is unavailable during build, return empty array
-    // New posts will be generated on-demand thanks to dynamicParams = true
     console.warn('Could not fetch slugs from CMS:', error)
     return []
-  }
-}
-
-// Generate metadata for SEO
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params
-  const client = getSleekClient()
-  const post = (await client.getPage(`/blog/${slug}`)) as BlogPost | null
-
-  if (!post) {
-    return {
-      title: 'Post Not Found',
-    }
-  }
-
-  return {
-    title: post.title,
-    openGraph: {
-      title: post.title,
-      images: post.image ? [post.image] : [],
-    },
   }
 }
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params
   const client = getSleekClient()
-  const post = (await client.getPage(`/blog/${slug}`)) as BlogPost | null
+  const post = await client.getPage(`/blog/${slug}`)
 
   if (!post) {
     notFound()

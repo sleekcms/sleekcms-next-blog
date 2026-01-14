@@ -8,15 +8,3 @@ export function getSleekClient() {
     cacheMinutes: 1,
   })
 }
-
-// Type definitions for blog content
-export interface BlogPost {
-  _path: string
-  _slug?: string
-  title: string
-  image?: {
-    url: string
-  }
-  content?: string
-  [key: string]: unknown
-}
