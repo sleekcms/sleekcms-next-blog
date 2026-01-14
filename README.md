@@ -18,9 +18,6 @@ Create a free account at **https://app.sleekcms.com** to get your site token and
 - **Dynamic blog routes**  
   Blog posts are rendered from `/blog/[slug]`.
 
-- **SEO-ready**  
-  Metadata is generated automatically from your CMS content.
-
 - **Minimal, responsive UI**  
   Clean defaults that are easy to customize.
 
